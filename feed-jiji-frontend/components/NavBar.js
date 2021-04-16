@@ -9,7 +9,6 @@ import {
 import * as React from "react";
 
 export default function NavBar(props) {
-  console.log(props);
   const { onPressLeft, onPressRight, left, center, right } = props;
   return (
     <View

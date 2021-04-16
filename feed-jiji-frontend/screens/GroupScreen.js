@@ -11,8 +11,7 @@ import { HorizontalDivider, NavBar } from "../components";
 export default function GroupScreen(props) {
   const { navigation } = props;
   const rightPress = () => {
-    //   navigate to CreateOrJoinGroupScreen
-    console.log("right pressed");
+    navigation.navigate("CreateOrJoinGroupScreen");
   };
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -24,7 +23,9 @@ export default function GroupScreen(props) {
           right={require("../assets/plus-icon.png")}
           onPressRight={rightPress}
         />
-        <HorizontalDivider />
+        <HorizontalDivider
+          styles={{ marginTop: -Dimensions.get("window").height * 0.02 }}
+        />
         <View
           style={{
             flexDirection: "row",
@@ -36,7 +37,7 @@ export default function GroupScreen(props) {
           <Text style={{ color: "white", fontSize: 23 }}>name</Text>
           <Text style={{ color: "white", fontSize: 23 }}>last time fed</Text>
         </View>
-        <HorizontalDivider addStyles={{ marginTop: 20 }} />
+        <HorizontalDivider styles={{ marginTop: 20 }} />
         {/* TEMP MOCK DATA NEED TO CALL API FOR THIS */}
         <TouchableOpacity>
           <View
