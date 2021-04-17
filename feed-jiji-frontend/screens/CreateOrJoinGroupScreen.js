@@ -124,10 +124,9 @@ export default function CreateOrJoinGroupScreen(props) {
               paddingLeft: 10,
               fontSize: 18,
             }}
-            //  change these
             onChangeText={onChangeGroupCodeField}
             value={groupCodeField}
-            placeholder="ex: BJX32XD"
+            placeholder="ex. BJX32XD"
           />
           <TouchableOpacity
             style={{

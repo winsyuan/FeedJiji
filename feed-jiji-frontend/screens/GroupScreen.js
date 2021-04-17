@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import * as React from "react";
-import { HorizontalDivider, NavBar } from "../components";
+import { HorizontalDivider, NavBar, TimeStamp } from "../components";
 
 export default function GroupScreen(props) {
   const { navigation } = props;
@@ -38,51 +38,23 @@ export default function GroupScreen(props) {
           <Text style={{ color: "white", fontSize: 23 }}>last time fed</Text>
         </View>
         <HorizontalDivider styles={{ marginTop: 20 }} />
-        {/* TEMP MOCK DATA NEED TO CALL API FOR THIS */}
-        <TouchableOpacity>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginHorizontal: Dimensions.get("window").width * 0.1,
-              marginTop: Dimensions.get("window").height * 0.03,
-            }}
-          >
-            <Text style={{ color: "white", fontSize: 23 }}>jiji</Text>
-            <Text style={{ color: "white", fontSize: 23 }}>
-              april 11, 8:34 am
-            </Text>
-          </View>
+        {/* TEMP MOCK DATA NEED TO CALL API FOR THIS USE A FLAT LIST */}
+        {/* send in group_id to the GroupInfoScreen and call backend api */}
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("GroupInfoScreen", {
+              name: "jiji",
+              group_id: "idfrombackend",
+            })
+          }
+        >
+          <TimeStamp name="jiji" timeStamp="april 11, 8:34 am" />
         </TouchableOpacity>
         <TouchableOpacity>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginHorizontal: Dimensions.get("window").width * 0.1,
-              marginTop: Dimensions.get("window").height * 0.03,
-            }}
-          >
-            <Text style={{ color: "white", fontSize: 23 }}>nico</Text>
-            <Text style={{ color: "white", fontSize: 23 }}>
-              april 10, 7:12 pm
-            </Text>
-          </View>
+          <TimeStamp name="nico" timeStamp="april 10, 7:12 pm" />
         </TouchableOpacity>
         <TouchableOpacity>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginHorizontal: Dimensions.get("window").width * 0.1,
-              marginTop: Dimensions.get("window").height * 0.03,
-            }}
-          >
-            <Text style={{ color: "white", fontSize: 23 }}>nee</Text>
-            <Text style={{ color: "white", fontSize: 23 }}>
-              march 20, 7:20 am
-            </Text>
-          </View>
+          <TimeStamp name="nee" timeStamp="march 20, 7:20 am" />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
