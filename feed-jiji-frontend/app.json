@@ -7,8 +7,8 @@
     "icon": "./assets/jiji-icon.png",
     "splash": {
       "image": "./assets/feed-jiji-splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "resizeMode",
+      "backgroundColor": "#382C54"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
