@@ -3,9 +3,6 @@
 __generated__
 web-build
 
-# Configs
-config.js
-
 # macOS
 .DS_Store
 
