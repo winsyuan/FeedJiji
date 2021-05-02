@@ -15,7 +15,8 @@ export default class App extends Component {
   async initializeUser () {
     firebase.initializeApp(firebaseConfig);
     await firebase.auth().signInAnonymously()
-    console.log(firebase.auth().currentUser)
+    // console.log(firebase.auth().currentUser)
+    // console.log(await firebase.auth().currentUser.getIdToken)
   }
   render() {
     const Stack = createStackNavigator();

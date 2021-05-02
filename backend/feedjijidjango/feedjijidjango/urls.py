@@ -15,7 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from feedjijidjango.user.views import UserView
+from feedjijidjango.group.views import GroupsView, GroupView
+from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("api/user/", csrf_exempt(UserView.as_view())),
+    path("api/group/", csrf_exempt(GroupsView.as_view())),
+    path("api/group/<string:group_id>", csrf_exempt(GroupView.as_view())),
 ]
