@@ -6,37 +6,36 @@ import GroupScreen from "./screens/GroupScreen";
 import GroupInfoScreen from "./screens/GroupInfoScreen";
 import CreateOrJoinGroupScreen from "./screens/CreateOrJoinGroupScreen";
 import { createStackNavigator } from "@react-navigation/stack";
-import * as firebase from 'firebase';
+import * as firebase from "firebase";
 // config is in .gitignore all firebase credentials are hidden
-import { firebaseConfig } from './config'
+import { firebaseConfig } from "./config";
 
 export default class App extends Component {
-
-  async initializeUser () {
+  async initializeUser() {
     firebase.initializeApp(firebaseConfig);
-    await firebase.auth().signInAnonymously()
+    await firebase.auth().signInAnonymously();
     // console.log(firebase.auth().currentUser)
-    // console.log(await firebase.auth().currentUser.getIdToken)
+    console.log(await firebase.auth().currentUser.getIdToken)
   }
   render() {
     const Stack = createStackNavigator();
+    this.initializeUser()
     return (
       <>
-      {this.initializeUser()}
         <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          <Stack.Screen name="GroupScreen" component={GroupScreen} />
-          <Stack.Screen
-            name="CreateOrJoinGroupScreen"
-            component={CreateOrJoinGroupScreen}
-          />
-          <Stack.Screen name="GroupInfoScreen" component={GroupInfoScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
+            <Stack.Screen name="GroupScreen" component={GroupScreen} />
+            <Stack.Screen
+              name="CreateOrJoinGroupScreen"
+              component={CreateOrJoinGroupScreen}
+            />
+            <Stack.Screen name="GroupInfoScreen" component={GroupInfoScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
       </>
     );
   }
