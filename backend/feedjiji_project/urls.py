@@ -1,7 +1,7 @@
-"""feedjijidjango URL Configuration
+"""feedjiji_project URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.2/topics/http/urls/
+    https://docs.djangoproject.com/en/3.0/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -15,13 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from feedjijidjango.user.views import UserView
-from feedjijidjango.group.views import GroupsView, GroupView
+from user.views import UserView
+from group.views import GroupView, GroupsView
 from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/user/", csrf_exempt(UserView.as_view())),
     path("api/group/", csrf_exempt(GroupsView.as_view())),
-    path("api/group/<string:group_id>", csrf_exempt(GroupView.as_view())),
+    path("api/group/<str:group_id>", csrf_exempt(GroupView.as_view())),
 ]

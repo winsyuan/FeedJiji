@@ -14,9 +14,21 @@ export default class App extends Component {
   async initializeUser() {
     firebase.initializeApp(firebaseConfig);
     await firebase.auth().signInAnonymously();
-    // console.log(firebase.auth().currentUser)
-    console.log(await firebase.auth().currentUser.getIdToken)
+    console.log(await firebase.auth().currentUser.getIdToken())
+    
   }
+  //   fetch('https://mywebsite.com/endpoint/', {
+  //     method: 'POST',
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({
+  //       firstParam: 'yourValue',
+  //       secondParam: 'yourOtherValue'
+  //     })
+  //   });
+  // }
   render() {
     const Stack = createStackNavigator();
     this.initializeUser()
