@@ -38,23 +38,9 @@ class GroupsView(View):
         group = Group(**kwargs)
         group.save()
         user = User.get_user(user_id)
-        print(user.groups)
-        user.groups.add(group)
+        user.groups.append(group)
         user.save()
-        # print(user.groups)
-        # # user.groups.push(group)
-        # # print(user.groups_id.add(group))
-        # # user.groups = []
-        # # print(user.groups.add(group.id))
-        # print(user.groups)
-        # user.groups = []
-        # print(user.groups)
-        # user.groups.append(group)
-        # print(user.groups)
-        # user.save()
-        # print(user)
         return HttpResponse("ellllooo")
-
 
 
 class GroupView(View):

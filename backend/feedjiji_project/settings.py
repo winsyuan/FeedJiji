@@ -14,6 +14,7 @@ import os
 from dotenv import load_dotenv
 import firebase_admin
 from firebase_admin import credentials
+from mongoengine import connect
 
 cred = credentials.Certificate(
     "./config/feed-jiji-firebase-adminsdk-1u4we-cfe7c91a91.json"
@@ -83,6 +84,7 @@ WSGI_APPLICATION = "feedjiji_project.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+# set in .env
 load_dotenv()
 DATABASES = {
     "default": {
@@ -93,7 +95,8 @@ DATABASES = {
         },
     }
 }
-# set in .env
+# connect mongoengine
+connect(host=os.getenv("MONGO_URL"))
 
 
 # Password validation
@@ -133,3 +136,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = "/static/"
+

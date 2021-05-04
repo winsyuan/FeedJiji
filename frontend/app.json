@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Feed Jiji",
-    "slug": "Feed Jiji",
+    "slug": "feed-jiji",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/jiji-icon.png",

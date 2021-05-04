@@ -3,41 +3,35 @@ from djongo import models
 from django import forms
 from uuid import uuid4
 
-
-class Fed(models.Model):
-    name = models.CharField(max_length=30)
-    time_fed = models.DateTimeField(default=datetime.now())
-
-    class Meta:
-        abstract = True
+from mongoengine import Document, StringField, ListField, ReferenceField, EmbeddedDocument,DateTimeField, EmbeddedDocumentField
 
 
-class FedForm(forms.ModelForm):
-    class Meta:
-        model = Fed
-        fields = ("name", "time_fed")
+class Fed(EmbeddedDocument):
+    name = StringField(max_length=30)
+    time_fed = DateTimeField(default=datetime.now())
 
 
-class Group(models.Model):
+class Group(Document):
     """
     Name of the group (pet name)
     """
-    name = models.CharField(max_length=30)
+    name = StringField()
 
     """
     List of all times times and who fed
     """
-    fed_times = models.ArrayField(model_container=Fed, model_form_class=FedForm)
+    fed_times = ListField(EmbeddedDocumentField(Fed))
 
     """
     Group invite code
     """
-    group_code = models.CharField(max_length=10)
+    group_code = StringField()
 
-    class Meta:
-        indexes = [
-            models.Index(fields=["group_code"]),
+    meta = {
+        'indexes': [
+            'group_code',
         ]
+    }
 
     @classmethod
     def create_code(cls):

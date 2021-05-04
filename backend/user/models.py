@@ -1,30 +1,24 @@
 from djongo import models
 from group.models import Group
+from mongoengine import Document, StringField, ListField, ReferenceField
 
 
-class User(models.Model):
+class User(Document):
     """
     User ID with firebase
     """
 
-    firebase_id = models.CharField(max_length=100, primary_key=True)
+    firebase_id = StringField(primary_key=True)
 
     """
     List of all the groups user is in
     """
-    # groups = models.ArrayReferenceField(
-    #     to=Group,
-    #     on_delete=models.CASCADE,
-    # )
-    # groups = models.ArrayField(Group)
-    # groups = models.ArrayField(models.ObjectIdField())
-    # group_ids = models.ArrayField(models.ObjectIdField)
-    # groups = models.ArrayReferenceField(Group, on_delete=models.SET_DEFAULT, default=[])
-    groups = models.ArrayReferenceField(Group)
+    groups = ListField(ReferenceField(Group))
+
     """
     Name of user
     """
-    name = models.CharField(max_length=30)
+    name = StringField()
 
     @classmethod
     def get_user(cls, firebase_id):
@@ -32,5 +26,6 @@ class User(models.Model):
         if user is not None:
             return user
         return cls(firebase_id=firebase_id).save()
+
 
 
