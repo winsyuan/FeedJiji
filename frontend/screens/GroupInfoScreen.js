@@ -11,6 +11,7 @@ import * as React from "react";
 import { NavBar, HorizontalDivider, TimeStamp } from "../components/index";
 import { apiUrl } from "../config";
 import * as firebase from "firebase";
+import Moment from "moment";
 
 export default function GroupInfoScreen(props) {
   const { name, group_id } = props.route.params;
@@ -60,7 +61,7 @@ export default function GroupInfoScreen(props) {
         json.fed_times.map((fed) => {
           data.push({
             name: fed.name,
-            time_fed: fed.time_fed.substring(0, 10),
+            time_fed: Moment(fed.time_fed).format("MMMM D, HH:mm").toLowerCase(),
           });
         });
         setFedTimes(data);

@@ -16,6 +16,7 @@ import { HorizontalDivider, NavBar, TimeStamp } from "../components";
 import * as firebase from "firebase";
 import { AntDesign } from "@expo/vector-icons";
 import { apiUrl } from "../config";
+import Moment from "moment";
 
 export default function GroupScreen(props) {
   const { navigation } = props;
@@ -71,12 +72,13 @@ export default function GroupScreen(props) {
                 });
               }}
             >
-              {/*  TODO: format the time */}
               <TimeStamp
                 name={group.name}
                 timeStamp={
                   group.fed_times.length > 0
-                    ? group.fed_times[0].time_fed.substring(0, 10)
+                    ? Moment(group.fed_times[0].time_fed)
+                        .format("MMMM D, HH:mm")
+                        .toLowerCase()
                     : "not fed yet"
                 }
               />
