@@ -33,10 +33,11 @@ class GroupsView(View):
             user_id = firebase_user["user_id"]
         except:
             return HttpResponseForbidden("Invalid Firebase Token")
-        kwargs = {}
-        kwargs["id"] = uuid.uuid4()
-        kwargs["name"] = body_data["name"]
-        kwargs["group_code"] = Group.create_code()
+        kwargs = {
+            "id": uuid.uuid4(),
+            "name": body_data["name"],
+            "group_code": Group.create_code(),
+        }
         group = Group(**kwargs).save()
         user = User.get_user(user_id)
         user.groups.append(group)
@@ -53,6 +54,7 @@ class GroupView(View):
         group = Group.objects(pk=group_id).first()
         if group is None:
             return HttpResponseNotFound("Group not found")
+        # TODO: paginate the fed_times
         return JsonResponse(GroupSerializer(group).data)
 
     def patch(self, request, group_id):

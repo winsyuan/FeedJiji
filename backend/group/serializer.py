@@ -7,6 +7,7 @@ class FedSerializer(serializers.Serializer):
 
 
 class GroupSerializer(serializers.Serializer):
+    id = serializers.UUIDField()
     name = serializers.CharField()
     group_code = serializers.CharField()
     fed_times = serializers.ListField(child=FedSerializer())

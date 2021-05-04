@@ -9,16 +9,34 @@ import { createStackNavigator } from "@react-navigation/stack";
 import * as firebase from "firebase";
 // config is in .gitignore all firebase credentials are hidden
 import { firebaseConfig } from "./config";
+import AppLoading from "expo-app-loading";
 
 export default class App extends Component {
+  state = {
+    isReady: false,
+  };
+
   async initializeUser() {
-    firebase.initializeApp(firebaseConfig);
-    await firebase.auth().signInAnonymously();
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+      await firebase.auth().signInAnonymously();
+    } else {
+      firebase.app();
+    }
+    console.log("initialized firebase");
   }
 
   render() {
     const Stack = createStackNavigator();
-    this.initializeUser();
+    if (!this.state.isReady) {
+      return (
+        <AppLoading
+          startAsync={this.initializeUser}
+          onFinish={() => this.setState({ isReady: true })}
+          onError={console.warn}
+        />
+      );
+    }
     return (
       <>
         <NavigationContainer>

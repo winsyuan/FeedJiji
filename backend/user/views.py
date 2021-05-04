@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render
 from django.views import View
 from django.http import HttpResponse, HttpResponseForbidden
@@ -28,5 +30,24 @@ class UserView(View):
         user = User.get_user(user_id)
         for group in user.groups:
             if len(group.fed_times) > 0:
-                group.fed_times = group.fed_times[-1]
+                group.fed_times = [group.fed_times[-1]]
+        return JsonResponse(UserSerializer(user).data)
+
+    def patch(self, request):
+        try:
+            firebase_user = auth.verify_id_token(
+                request.META["HTTP_AUTHORIZATION"].split(" ")[1]
+            )
+            user_id = firebase_user["user_id"]
+        except:
+            return HttpResponseForbidden("Invalid Firebase Token")
+        try:
+            body_unicode = request.body.decode("utf-8")
+            body_data = json.loads(body_unicode)
+        except:
+            return HttpResponse("Couldn't Parse Response")
+        user = User.get_user(user_id)
+        if body_data["name"]:
+            user.name = body_data["name"]
+        user.save()
         return JsonResponse(UserSerializer(user).data)

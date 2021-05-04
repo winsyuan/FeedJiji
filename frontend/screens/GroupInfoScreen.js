@@ -1,32 +1,52 @@
 import { SafeAreaView, View, Dimensions, Alert, FlatList } from "react-native";
 import * as React from "react";
 import { NavBar, HorizontalDivider, TimeStamp } from "../components/index";
+import { apiUrl } from "../config";
+import * as firebase from "firebase";
 
 export default function GroupInfoScreen(props) {
-  // default set but need to call backend with group_id
-  const { name } = props.route.params;
-  const [groupName, onChangeName] = React.useState(name);
+  const { name, group_id } = props.route.params;
+  const [groupName] = React.useState(name);
+  const [groupCode, setGroupCode] = React.useState(name);
+  const [fedTimes, setFedTimes] = React.useState([]);
+
   const { navigation } = props;
+
+  React.useEffect(() => {
+    getGroupInfo();
+  }, []);
+
+  async function getGroupInfo() {
+    const bearerToken = await firebase.auth().currentUser.getIdToken();
+    await fetch(apiUrl + `api/group/${group_id}/`, {
+      method: "GET",
+      headers: new Headers({
+        Authorization: "Bearer " + bearerToken,
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        setGroupCode(json.group_code);
+        const data = [];
+        json.fed_times.map((fed) => {
+          data.push({
+            name: fed.name,
+            time_fed: fed.time_fed.substring(0, 10),
+          });
+        });
+        setFedTimes(data);
+      });
+  }
+
   const leftPress = () => {
     navigation.goBack();
   };
   const rightPress = () => {
-    // modal pop up to show prop code or invite
-    // or we can use RN Share.share
-    Alert.alert(
-      "Share this code for them to join the group!",
-      // hard coded need to grab from backend
-      "BJX32XD",
-      [{ text: "OK" }]
-    );
+    // modal pop up to show prop code or invite or we can use RN Share.share
+    Alert.alert("Share this code for them to join the group!", groupCode, [
+      { text: "OK" },
+    ]);
   };
-  const data = [
-    { name: "john", time_fed: "april 11, 8:34 am" },
-    { name: "bob", time_fed: "april 10, 7:41 pm" },
-    { name: "andrew", time_fed: "april 10, 7:54 am" },
-    { name: "nikesha", time_fed: "april 9, 8:12 pm" },
-    { name: "taylor", time_fed: "april 9, 8:37 am" },
-  ];
 
   const renderItem = ({ item }) => (
     <TimeStamp name={item.name} timeStamp={item.time_fed} />
@@ -46,9 +66,9 @@ export default function GroupInfoScreen(props) {
         <HorizontalDivider
           styles={{ marginTop: -Dimensions.get("window").height * 0.02 }}
         />
-        {/* figure out the lazy loading */}
+        {/* TODO: figure out the lazy loading */}
         <FlatList
-          data={data}
+          data={fedTimes ? fedTimes : []}
           renderItem={renderItem}
           keyExtractor={(item) => item.name}
         />

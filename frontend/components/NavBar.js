@@ -32,7 +32,7 @@ export default function NavBar(props) {
         >
           <Image
             source={left}
-            style={{ height: 70, width: 70, resizeMode: "contain" }}
+            style={{ height: 42, width: 42, resizeMode: "contain" }}
           />
         </TouchableOpacity>
       ) : (
@@ -63,7 +63,7 @@ export default function NavBar(props) {
         >
           <Image
             source={right}
-            style={{ height: 70, width: 70, resizeMode: "contain" }}
+            style={{ height: 42, width: 42, resizeMode: "contain" }}
           />
         </TouchableOpacity>
       ) : (
