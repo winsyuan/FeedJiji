@@ -16,15 +16,13 @@ from django.forms.models import model_to_dict
 from user.models import User
 
 from .serializer import UserSerializer
+from helpers import firebase_helper_verify
 
 
 class UserView(View):
     def get(self, request, **kwargs):
         try:
-            firebase_user = auth.verify_id_token(
-                request.META["HTTP_AUTHORIZATION"].split(" ")[1]
-            )
-            user_id = firebase_user["user_id"]
+            user_id = firebase_helper_verify(request.META["HTTP_AUTHORIZATION"])
         except:
             return HttpResponseForbidden("Invalid Firebase Token")
         user = User.get_user(user_id)
@@ -35,10 +33,7 @@ class UserView(View):
 
     def patch(self, request):
         try:
-            firebase_user = auth.verify_id_token(
-                request.META["HTTP_AUTHORIZATION"].split(" ")[1]
-            )
-            user_id = firebase_user["user_id"]
+            user_id = firebase_helper_verify(request.META["HTTP_AUTHORIZATION"])
         except:
             return HttpResponseForbidden("Invalid Firebase Token")
         try:

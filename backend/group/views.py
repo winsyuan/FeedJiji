@@ -12,6 +12,7 @@ import json
 import uuid
 
 from firebase_admin import auth
+from helpers import firebase_helper_verify
 
 from user.models import User
 from .models import Group, Fed
@@ -27,10 +28,7 @@ class GroupsView(View):
             HttpResponse("Couldn't Parse Response")
 
         try:
-            firebase_user = auth.verify_id_token(
-                request.META["HTTP_AUTHORIZATION"].split(" ")[1]
-            )
-            user_id = firebase_user["user_id"]
+            user_id = firebase_helper_verify(request.META["HTTP_AUTHORIZATION"])
         except:
             return HttpResponseForbidden("Invalid Firebase Token")
         kwargs = {
@@ -48,7 +46,7 @@ class GroupsView(View):
 class GroupView(View):
     def get(self, request, group_id):
         try:
-            auth.verify_id_token(request.META["HTTP_AUTHORIZATION"].split(" ")[1])
+            firebase_helper_verify(request.META["HTTP_AUTHORIZATION"])
         except:
             return HttpResponseForbidden("Invalid Firebase Token")
         group = Group.objects(pk=group_id).first()
@@ -59,10 +57,7 @@ class GroupView(View):
 
     def patch(self, request, group_id):
         try:
-            firebase_user = auth.verify_id_token(
-                request.META["HTTP_AUTHORIZATION"].split(" ")[1]
-            )
-            user_id = firebase_user["user_id"]
+            user_id = firebase_helper_verify(request.META["HTTP_AUTHORIZATION"])
         except:
             return HttpResponseForbidden("Invalid Firebase Token")
         user = User.get_user(user_id)
@@ -78,10 +73,7 @@ class GroupView(View):
 class GroupJoinView(View):
     def patch(self, request, group_code):
         try:
-            firebase_user = auth.verify_id_token(
-                request.META["HTTP_AUTHORIZATION"].split(" ")[1]
-            )
-            user_id = firebase_user["user_id"]
+            user_id = firebase_helper_verify(request.META["HTTP_AUTHORIZATION"])
         except:
             return HttpResponseForbidden("Invalid Firebase Token")
         group = Group.objects(group_code=group_code).first()
