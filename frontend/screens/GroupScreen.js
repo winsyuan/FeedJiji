@@ -8,6 +8,8 @@ import {
   Pressable,
   StyleSheet,
   TextInput,
+  ScrollView,
+  RefreshControl,
 } from "react-native";
 import * as React from "react";
 import { HorizontalDivider, NavBar, TimeStamp } from "../components";
@@ -19,9 +21,9 @@ export default function GroupScreen(props) {
   const { navigation } = props;
   const [modalVisible, setModalVisible] = React.useState(false);
   const [name, onChangeName] = React.useState("");
-  const [bearerToken, setBearerToken] = React.useState("");
   const [data, dataSet] = React.useState(null);
   const [groupData, setGroupData] = React.useState([]);
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const rightPress = () => {
     navigation.navigate("CreateOrJoinGroupScreen");
@@ -86,6 +88,12 @@ export default function GroupScreen(props) {
   }
   React.useEffect(() => {
     getUserGroups();
+  }, []);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getUserGroups();
+    setRefreshing(false);
   }, []);
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -164,8 +172,11 @@ export default function GroupScreen(props) {
           </View>
         </Modal>
       </View>
-      <View
+      <ScrollView
         style={{ height: "100%", width: "100%", backgroundColor: "#382c52" }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
         <NavBar
           center="groups"
@@ -189,8 +200,25 @@ export default function GroupScreen(props) {
           <Text style={{ color: "white", fontSize: 23 }}>last time fed</Text>
         </View>
         <HorizontalDivider styles={{ marginTop: 20 }} />
-        {groupData.length > 0 && groupData}
-      </View>
+        {groupData.length < 0 ? (
+          groupData
+        ) : (
+          <View style={{ alignItems: "center", marginTop: 12 }}>
+            <Text
+              style={{
+                textAlign: "center",
+                fontSize: 17,
+                color: "white",
+                width: "80%",
+              }}
+            >
+              {" "}
+              Hey, theres no groups you're in, check the button on the top right
+              to get started!
+            </Text>
+          </View>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 }
