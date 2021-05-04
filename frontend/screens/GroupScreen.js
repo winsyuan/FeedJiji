@@ -200,7 +200,7 @@ export default function GroupScreen(props) {
           <Text style={{ color: "white", fontSize: 23 }}>last time fed</Text>
         </View>
         <HorizontalDivider styles={{ marginTop: 20 }} />
-        {groupData.length < 0 ? (
+        {groupData.length > 0 ? (
           groupData
         ) : (
           <View style={{ alignItems: "center", marginTop: 12 }}>
