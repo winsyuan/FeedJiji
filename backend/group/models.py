@@ -3,7 +3,16 @@ from djongo import models
 from django import forms
 from uuid import uuid4
 
-from mongoengine import Document, StringField, ListField, ReferenceField, EmbeddedDocument,DateTimeField, EmbeddedDocumentField
+from mongoengine import (
+    Document,
+    StringField,
+    ListField,
+    ReferenceField,
+    EmbeddedDocument,
+    DateTimeField,
+    EmbeddedDocumentField,
+    UUIDField,
+)
 
 
 class Fed(EmbeddedDocument):
@@ -12,6 +21,7 @@ class Fed(EmbeddedDocument):
 
 
 class Group(Document):
+    id = UUIDField(primary_key=True)
     """
     Name of the group (pet name)
     """
@@ -28,8 +38,8 @@ class Group(Document):
     group_code = StringField()
 
     meta = {
-        'indexes': [
-            'group_code',
+        "indexes": [
+            "group_code",
         ]
     }
 
@@ -41,4 +51,3 @@ class Group(Document):
             code = str(uuid4())[:5]
             group = Group.objects.filter(group_code=code).first()
         return code
-

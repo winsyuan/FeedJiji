@@ -44,20 +44,20 @@ export default function GroupScreen(props) {
         <TouchableOpacity
           onPress={async () => {
             const bearerToken = await firebase.auth().currentUser.getIdToken();
-            await fetch("http://192.168.50.12:8000/api/user", {
-              method: "GET",
-              headers: new Headers({
-                Authorization: "Bearer " + bearerToken,
-              }),
-            })
-              .then((response) => response.json())
-              .then((json) => {
-                console.log(json);
-              });
-            // navigation.navigate("GroupInfoScreen", {
-            //   name: "jiji",
-            //   group_id: "idfrombackend",
+            // await fetch("http://192.168.50.12:8000/api/user", {
+            //   method: "GET",
+            //   headers: new Headers({
+            //     Authorization: "Bearer " + bearerToken,
+            //   }),
             // })
+            //   .then((response) => response.json())
+            //   .then((json) => {
+            //     console.log(json);
+            //   });
+            navigation.navigate("GroupInfoScreen", {
+              name: "jiji",
+              group_id: "idfrombackend",
+            })
           }}
         >
           <TimeStamp name="jiji" timeStamp="april 11, 8:34 am" />

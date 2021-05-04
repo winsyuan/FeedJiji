@@ -1,12 +1,8 @@
 from rest_framework import serializers
+from group.serializer import GroupSerializer
 
-
-# groups = models.ArrayReferenceField(
-#     to=Group,
-#     on_delete=models.CASCADE,
-# )
 
 class UserSerializer(serializers.Serializer):
-    firebase_id = serializers.CharField(max_length=100)
-    name = serializers.CharField(max_length=30)
-    # group = serializers.DateTimeField()
+    firebase_id = serializers.CharField()
+    name = serializers.CharField()
+    groups = serializers.ListField(child=GroupSerializer())

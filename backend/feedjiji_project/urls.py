@@ -16,12 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from user.views import UserView
-from group.views import GroupView, GroupsView
+from group.views import GroupView, GroupsView, GroupJoinView
 from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/user/", csrf_exempt(UserView.as_view())),
     path("api/group/", csrf_exempt(GroupsView.as_view())),
-    path("api/group/<str:group_id>", csrf_exempt(GroupView.as_view())),
+    path("api/group/<str:group_id>/", csrf_exempt(GroupView.as_view())),
+    path("api/group/join/<str:group_code>/", csrf_exempt(GroupJoinView.as_view())),
 ]

@@ -1,4 +1,3 @@
-from djongo import models
 from group.models import Group
 from mongoengine import Document, StringField, ListField, ReferenceField
 
@@ -25,7 +24,4 @@ class User(Document):
         user = User.objects.filter(firebase_id=firebase_id).first()
         if user is not None:
             return user
-        return cls(firebase_id=firebase_id).save()
-
-
-
+        return User(firebase_id=firebase_id).save()

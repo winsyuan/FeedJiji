@@ -22,6 +22,7 @@ export default function CreateOrJoinGroupScreen(props) {
     //    call api to get
         if (createField.length > 0) {
             const bearerToken = await firebase.auth().currentUser.getIdToken();
+            console.log(bearerToken)
             await fetch("http://192.168.50.12:8000/api/group/", {
                 method: "POST",
                 headers: new Headers({
