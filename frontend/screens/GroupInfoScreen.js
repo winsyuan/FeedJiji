@@ -1,4 +1,12 @@
-import { SafeAreaView, View, Dimensions, Alert, FlatList } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  Dimensions,
+  Alert,
+  FlatList,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import * as React from "react";
 import { NavBar, HorizontalDivider, TimeStamp } from "../components/index";
 import { apiUrl } from "../config";
@@ -16,6 +24,27 @@ export default function GroupInfoScreen(props) {
     getGroupInfo();
   }, []);
 
+  async function fedPet() {
+    const bearerToken = await firebase.auth().currentUser.getIdToken();
+    await fetch(apiUrl + `api/group/${group_id}/`, {
+      method: "PATCH",
+      headers: new Headers({
+        Authorization: "Bearer " + bearerToken,
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        setGroupCode(json.group_code);
+        const data = [];
+        json.fed_times.map((fed) => {
+          data.push({
+            name: fed.name,
+            time_fed: fed.time_fed.substring(0, 10),
+          });
+        });
+        setFedTimes(data);
+      });
+  }
   async function getGroupInfo() {
     const bearerToken = await firebase.auth().currentUser.getIdToken();
     await fetch(apiUrl + `api/group/${group_id}/`, {
@@ -67,11 +96,36 @@ export default function GroupInfoScreen(props) {
           styles={{ marginTop: -Dimensions.get("window").height * 0.02 }}
         />
         {/* TODO: figure out the lazy loading */}
-        <FlatList
-          data={fedTimes ? fedTimes : []}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.name}
-        />
+        <View style={{ flex: 1 }}>
+          <FlatList
+            data={fedTimes ? fedTimes : []}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+          />
+        </View>
+        <TouchableOpacity
+          style={{
+            backgroundColor: "black",
+            height: Dimensions.get("window").height * 0.08,
+            marginBottom: Dimensions.get("window").height * 0.03,
+            width: Dimensions.get("window").width * 0.7,
+            alignSelf: "center",
+            borderRadius: 20,
+            justifyContent: "center",
+          }}
+          onPress={() => fedPet()}
+        >
+          <Text
+            style={{
+              color: "white",
+              textAlign: "center",
+              alignItems: "center",
+              fontSize: 20,
+            }}
+          >
+            Fed {groupName}
+          </Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
