@@ -1,6 +1,7 @@
 from datetime import datetime
 from djongo import models
 from django import forms
+from uuid import uuid4
 
 
 class Fed(models.Model):
@@ -18,8 +19,6 @@ class FedForm(forms.ModelForm):
 
 
 class Group(models.Model):
-    id = models.UUIDField(primary_key=True)
-
     """
     Name of the group (pet name)
     """
@@ -39,3 +38,13 @@ class Group(models.Model):
         indexes = [
             models.Index(fields=["group_code"]),
         ]
+
+    @classmethod
+    def create_code(cls):
+        code = str(uuid4())[:5].upper()
+        group = Group.objects.filter(group_code=code).first()
+        while group is not None:
+            code = str(uuid4())[:5]
+            group = Group.objects.filter(group_code=code).first()
+        return code
+

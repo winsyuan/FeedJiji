@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import * as React from "react";
 import { NavBar, HorizontalDivider } from "../components";
+import * as firebase from "firebase";
 
 export default function CreateOrJoinGroupScreen(props) {
   const { navigation } = props;
@@ -16,6 +17,30 @@ export default function CreateOrJoinGroupScreen(props) {
   };
   const [createField, onChangeCreateField] = React.useState("");
   const [groupCodeField, onChangeGroupCodeField] = React.useState("");
+
+    async function createGroup() {
+    //    call api to get
+        if (createField.length > 0) {
+            const bearerToken = await firebase.auth().currentUser.getIdToken();
+            await fetch("http://192.168.50.12:8000/api/group/", {
+                method: "POST",
+                headers: new Headers({
+                    Authorization: "Bearer " + bearerToken,
+                }),
+                body: JSON.stringify({
+                    name: createField,
+                })
+            })
+                .then((response) => response.json())
+                .then((json) => {
+                    console.log(json);
+                });
+
+        } else {
+            console.log("invalid pet name")
+        }
+
+    }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -77,6 +102,7 @@ export default function CreateOrJoinGroupScreen(props) {
               marginBottom: Dimensions.get("window").height * 0.03,
               justifyContent: "center",
             }}
+            onPress={() => createGroup()}
           >
             <Text
               style={{

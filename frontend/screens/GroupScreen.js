@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import * as React from "react";
 import { HorizontalDivider, NavBar, TimeStamp } from "../components";
+import * as firebase from "firebase";
 
 export default function GroupScreen(props) {
   const { navigation } = props;
@@ -41,12 +42,23 @@ export default function GroupScreen(props) {
         {/* TEMP MOCK DATA NEED TO CALL API FOR THIS USE A FLAT LIST */}
         {/* send in group_id to the GroupInfoScreen and call backend api */}
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("GroupInfoScreen", {
-              name: "jiji",
-              group_id: "idfrombackend",
+          onPress={async () => {
+            const bearerToken = await firebase.auth().currentUser.getIdToken();
+            await fetch("http://192.168.50.12:8000/api/user", {
+              method: "GET",
+              headers: new Headers({
+                Authorization: "Bearer " + bearerToken,
+              }),
             })
-          }
+              .then((response) => response.json())
+              .then((json) => {
+                console.log(json);
+              });
+            // navigation.navigate("GroupInfoScreen", {
+            //   name: "jiji",
+            //   group_id: "idfrombackend",
+            // })
+          }}
         >
           <TimeStamp name="jiji" timeStamp="april 11, 8:34 am" />
         </TouchableOpacity>

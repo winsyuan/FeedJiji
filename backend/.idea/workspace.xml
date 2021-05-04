@@ -7,6 +7,13 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
@@ -67,7 +74,9 @@
       <option name="presentableId" value="Default" />
       <updated>1620002810343</updated>
       <workItem from="1620002811847" duration="2280000" />
-      <workItem from="1620005130308" duration="5022000" />
+      <workItem from="1620005130308" duration="8252000" />
+      <workItem from="1620055860745" duration="10584000" />
+      <workItem from="1620086425371" duration="1437000" />
     </task>
     <servers />
   </component>

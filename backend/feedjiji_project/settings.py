@@ -33,7 +33,7 @@ SECRET_KEY = "#^8$tm952-22_$314_957el3pc&gain-ku)k&y+n3172=a-h^5"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.50.12']
 
 
 # Application definition

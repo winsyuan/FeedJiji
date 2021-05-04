@@ -12,11 +12,15 @@ class User(models.Model):
     """
     List of all the groups user is in
     """
-    groups = models.ArrayReferenceField(
-        to=Group,
-        on_delete=models.CASCADE,
-    )
-
+    # groups = models.ArrayReferenceField(
+    #     to=Group,
+    #     on_delete=models.CASCADE,
+    # )
+    # groups = models.ArrayField(Group)
+    # groups = models.ArrayField(models.ObjectIdField())
+    # group_ids = models.ArrayField(models.ObjectIdField)
+    # groups = models.ArrayReferenceField(Group, on_delete=models.SET_DEFAULT, default=[])
+    groups = models.ArrayReferenceField(Group)
     """
     Name of user
     """
@@ -28,3 +32,5 @@ class User(models.Model):
         if user is not None:
             return user
         return cls(firebase_id=firebase_id).save()
+
+
