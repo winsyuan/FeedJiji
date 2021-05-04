@@ -16,6 +16,8 @@ media
 
 config/
 
+.idea/
+
 # Distribution / packaging 
 .Python build/ 
 develop-eggs/ 
