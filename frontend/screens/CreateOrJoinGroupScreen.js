@@ -5,6 +5,10 @@ import {
   SafeAreaView,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Alert,
 } from "react-native";
 import * as React from "react";
 import { NavBar, HorizontalDivider } from "../components";
@@ -31,14 +35,21 @@ export default function CreateOrJoinGroupScreen(props) {
       })
         .then((response) => response.json())
         .then((json) => {
-          console.log(json);
+          navigation.navigate("GroupInfoScreen", {
+            name: json.name,
+            group_id: json.id,
+          });
+        })
+        .catch(() => {
+          Alert.alert(
+            "Issue joining group",
+            "Sorry, you're already in this group",
+            [{ text: "Close" }]
+          );
         });
-    } else {
-      console.log("invalid code");
     }
   }
 
-  // TODO: setup success / failure messages
   async function createGroup() {
     if (createField.length > 0) {
       const bearerToken = await firebase.auth().currentUser.getIdToken();
@@ -53,16 +64,17 @@ export default function CreateOrJoinGroupScreen(props) {
       })
         .then((response) => response.json())
         .then((json) => {
-          console.log(json);
+          navigation.navigate("GroupInfoScreen", {
+            name: json.name,
+            group_id: json.id,
+          });
         });
-    } else {
-      console.log("invalid pet name");
     }
   }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View
+      <ScrollView
         style={{ height: "100%", width: "100%", backgroundColor: "#382c52" }}
       >
         <NavBar
@@ -134,7 +146,6 @@ export default function CreateOrJoinGroupScreen(props) {
           </TouchableOpacity>
         </View>
         <HorizontalDivider />
-
         <View>
           <Text
             style={{
@@ -196,7 +207,7 @@ export default function CreateOrJoinGroupScreen(props) {
             </Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

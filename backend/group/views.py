@@ -70,7 +70,7 @@ class GroupView(View):
         if group is None:
             return HttpResponseNotFound("Group not found")
         fed_now = Fed(name=user.name, time_fed=datetime.datetime.now())
-        group.fed_times.append(fed_now)
+        group.fed_times.insert(0, fed_now)
         group.save()
         return JsonResponse(GroupSerializer(group).data)
 
@@ -88,6 +88,9 @@ class GroupJoinView(View):
         if group is None:
             return HttpResponseNotFound("Group not found")
         user = User.get_user(user_id)
+        # check if user is in group
+        if group in user.groups:
+            return HttpResponseForbidden("User already in this group")
         user.groups.append(group)
         user.save()
         return JsonResponse(GroupSerializer(group).data)
