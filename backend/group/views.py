@@ -1,6 +1,5 @@
 import datetime
 
-from django.shortcuts import render
 from django.views import View
 from django.http import (
     HttpResponse,
@@ -9,10 +8,9 @@ from django.http import (
     HttpResponseNotFound,
     QueryDict,
 )
-import json
 import uuid
 
-from helpers import firebase_helper_verify
+from helpers import firebase_helper_verify, get_request_body
 
 from user.models import User
 from .models import Group, Fed
@@ -21,15 +19,11 @@ from .serializer import GroupSerializer
 
 class GroupsView(View):
     def post(self, request):
-        try:
-            body_unicode = request.body.decode("utf-8")
-            body_data = json.loads(body_unicode)
-        except:
-            HttpResponse("Couldn't Parse Response")
-
-        try:
-            user_id = firebase_helper_verify(request.META["HTTP_AUTHORIZATION"])
-        except:
+        body_data = get_request_body(request)
+        if not body_data["success"]:
+            return HttpResponse("Couldn't Parse Response")
+        response = firebase_helper_verify(request.META["HTTP_AUTHORIZATION"])
+        if not response["success"]:
             return HttpResponseForbidden("Invalid Firebase Token")
         kwargs = {
             "id": uuid.uuid4(),
@@ -37,7 +31,7 @@ class GroupsView(View):
             "group_code": Group.create_code(),
         }
         group = Group(**kwargs).save()
-        user = User.get_user(user_id)
+        user = User.get_user(response["user_id"])
         user.groups.append(group)
         user.save()
         return JsonResponse(GroupSerializer(group).data)
@@ -45,9 +39,8 @@ class GroupsView(View):
 
 class GroupView(View):
     def get(self, request, group_id):
-        try:
-            firebase_helper_verify(request.META["HTTP_AUTHORIZATION"])
-        except:
+        response = firebase_helper_verify(request.META["HTTP_AUTHORIZATION"])
+        if not response["success"]:
             return HttpResponseForbidden("Invalid Firebase Token")
         try:
             page = int(QueryDict(request.META["QUERY_STRING"]).get("page"))
@@ -62,11 +55,10 @@ class GroupView(View):
         return JsonResponse(GroupSerializer(group).data)
 
     def patch(self, request, group_id):
-        try:
-            user_id = firebase_helper_verify(request.META["HTTP_AUTHORIZATION"])
-        except:
+        response = firebase_helper_verify(request.META["HTTP_AUTHORIZATION"])
+        if not response["success"]:
             return HttpResponseForbidden("Invalid Firebase Token")
-        user = User.get_user(user_id)
+        user = User.get_user(response["user_id"])
         group = Group.objects(pk=group_id).first()
         if group is None:
             return HttpResponseNotFound("Group not found")
@@ -78,17 +70,16 @@ class GroupView(View):
 
 class GroupJoinView(View):
     def patch(self, request, group_code):
-        try:
-            user_id = firebase_helper_verify(request.META["HTTP_AUTHORIZATION"])
-        except:
+        response = firebase_helper_verify(request.META["HTTP_AUTHORIZATION"])
+        if not response["success"]:
             return HttpResponseForbidden("Invalid Firebase Token")
         group = Group.objects(group_code=group_code).first()
         if group is None:
             return HttpResponseNotFound("Group not found")
-        user = User.get_user(user_id)
+        user = User.get_user(response["user_id"])
         # check if user is in group
-        if group in user.groups:
-            return HttpResponseForbidden("User already in this group")
+        # if group in user.groups:
+        #     return HttpResponseForbidden("User already in this group")
         user.groups.append(group)
         user.save()
         return JsonResponse(GroupSerializer(group).data)

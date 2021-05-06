@@ -42,7 +42,9 @@ export default function GroupInfoScreen(props) {
         json.fed_times.map((fed) => {
           data.push({
             name: fed.name,
-            time_fed: fed.time_fed.substring(0, 10),
+            time_fed: Moment(fed.time_fed)
+              .format("MMMM D, HH:mm")
+              .toLowerCase(),
           });
         });
         setFedTimes(data);
