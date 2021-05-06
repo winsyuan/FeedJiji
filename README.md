@@ -14,6 +14,7 @@
 - Firebase
 - Django
 - MongoDB
+- Docker
 
 
 ### UI Designs [(Figma)](https://www.figma.com/file/AYQFYuTM6fWEhoshHtK3pt/feed-jiji) 😨
