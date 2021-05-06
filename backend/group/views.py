@@ -7,11 +7,11 @@ from django.http import (
     HttpResponseForbidden,
     JsonResponse,
     HttpResponseNotFound,
+    QueryDict,
 )
 import json
 import uuid
 
-from firebase_admin import auth
 from helpers import firebase_helper_verify
 
 from user.models import User
@@ -49,10 +49,16 @@ class GroupView(View):
             firebase_helper_verify(request.META["HTTP_AUTHORIZATION"])
         except:
             return HttpResponseForbidden("Invalid Firebase Token")
+        try:
+            page = int(QueryDict(request.META["QUERY_STRING"]).get("page"))
+        except:
+            return HttpResponse("Couldn't Parse Response")
         group = Group.objects(pk=group_id).first()
         if group is None:
             return HttpResponseNotFound("Group not found")
-        # TODO: paginate the fed_times
+        limit = 20
+        start = page * limit
+        group.fed_times = group.fed_times[start : start + limit]
         return JsonResponse(GroupSerializer(group).data)
 
     def patch(self, request, group_id):

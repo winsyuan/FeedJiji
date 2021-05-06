@@ -16,8 +16,10 @@ import Moment from "moment";
 export default function GroupInfoScreen(props) {
   const { name, group_id } = props.route.params;
   const [groupName] = React.useState(name);
-  const [groupCode, setGroupCode] = React.useState(name);
+  const [groupCode, setGroupCode] = React.useState("");
   const [fedTimes, setFedTimes] = React.useState([]);
+  const [page, setPage] = React.useState(0);
+  const [initial, setInitial] = React.useState(true);
 
   const { navigation } = props;
 
@@ -48,7 +50,7 @@ export default function GroupInfoScreen(props) {
   }
   async function getGroupInfo() {
     const bearerToken = await firebase.auth().currentUser.getIdToken();
-    await fetch(apiUrl + `api/group/${group_id}/`, {
+    await fetch(apiUrl + `api/group/${group_id}/?page=${page}`, {
       method: "GET",
       headers: new Headers({
         Authorization: "Bearer " + bearerToken,
@@ -57,13 +59,16 @@ export default function GroupInfoScreen(props) {
       .then((response) => response.json())
       .then((json) => {
         setGroupCode(json.group_code);
-        const data = [];
+        let data = [];
         json.fed_times.map((fed) => {
           data.push({
             name: fed.name,
-            time_fed: Moment(fed.time_fed).format("MMMM D, HH:mm").toLowerCase(),
+            time_fed: Moment(fed.time_fed)
+              .format("MMMM D, HH:mm")
+              .toLowerCase(),
           });
         });
+        data = fedTimes.concat(data);
         setFedTimes(data);
       });
   }
@@ -81,6 +86,12 @@ export default function GroupInfoScreen(props) {
   const renderItem = ({ item }) => (
     <TimeStamp name={item.name} timeStamp={item.time_fed} />
   );
+
+  const getMoreTimes = async () => {
+    await setPage(page + 1);
+    getGroupInfo();
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View
@@ -102,6 +113,16 @@ export default function GroupInfoScreen(props) {
             data={fedTimes ? fedTimes : []}
             renderItem={renderItem}
             keyExtractor={(item) => item.id}
+            onEndReachedThreshold={0.1}
+            onEndReached={({ distanceFromEnd }) => {
+              if (initial) {
+                setInitial(false);
+                setPage(1);
+                return;
+              }
+              if (distanceFromEnd < 0) return;
+              getMoreTimes();
+            }}
           />
         </View>
         <TouchableOpacity
