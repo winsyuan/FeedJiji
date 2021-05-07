@@ -78,8 +78,8 @@ class GroupJoinView(View):
             return HttpResponseNotFound("Group not found")
         user = User.get_user(response["user_id"])
         # check if user is in group
-        # if group in user.groups:
-        #     return HttpResponseForbidden("User already in this group")
+        if group in user.groups:
+            return HttpResponseForbidden("User already in this group")
         user.groups.append(group)
         user.save()
         return JsonResponse(GroupSerializer(group).data)
